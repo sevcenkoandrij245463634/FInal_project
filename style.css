@@ -1,0 +1,119 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+    :root {
+      --bg: #6a4070;
+      --header: #c92ddf;
+      --nav-btn: #9b18b4;
+      --card: #4f2850;
+      --text: #c92ddf;
+      --dark: #2a0a33;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      padding: 8px;
+      background: var(--bg);
+      font-family: "Roboto", sans-serif;
+    }
+
+    /* ---------- Header ---------- */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 12px 16px;
+      background: var(--header);
+      border-radius: 28px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, .35);
+    }
+    .logo img {
+      display: block;
+      width: 186px;
+      height: 102px;
+      object-fit: cover;
+      border-radius: 18px;
+      box-shadow: 0 6px 10px rgba(0, 0, 0, .4);
+    }
+    
+    nav { display: flex; gap: 16px; }
+    nav a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 160px;
+      height: 82px;
+      padding: 8px;
+      text-align: center;
+      text-decoration: none;
+      font: 500 26px/1.1 "Inter", sans-serif;
+      color: var(--dark);
+      background: var(--nav-btn);
+      border-radius: 14px;
+      transition: filter .2s;
+    }
+    nav a:hover,
+    nav a:focus-visible { filter: brightness(1.2); outline: none; }
+
+    /* ---------- Products ---------- */
+    main {
+      flex: 1;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      gap: 24px;
+      padding: 0 16px;
+    }
+    .card {
+      width: 362px;
+      min-height: 446px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      background: var(--card);
+      border-radius: 32px;
+      color: var(--text);
+    }
+    .card img {
+      width: 100%;
+      height: 160px;
+      object-fit: contain;
+      background: #fff;
+    }
+    .card img.rounded { width: 260px; border-radius: 28px; }
+    .card h2 {
+      margin-top: 14px;
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.4;
+    }
+    .card .price {
+      margin-top: auto;
+      padding: 24px 0 40px;
+      font-size: 26px;
+      font-weight: 700;
+    }
+
+    /* ---------- Footer ---------- */
+    footer {
+      height: 126px;
+      background: var(--header);
+      border: 1px solid #000;
+      border-radius: 40px;
+    }
+
+    @media (max-width: 800px) {
+      header { flex-direction: column; }
+      nav { flex-wrap: wrap; justify-content: center; }
+      nav a { width: 140px; height: 64px; font-size: 20px; }
+      main { justify-content: center; }
+    }
