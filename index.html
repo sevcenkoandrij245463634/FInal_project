@@ -19,10 +19,11 @@
       <a href="#cpu">Cpu</a>
       <a href="#gpu">Graphics card</a>
       <a href="#psu">Power supply</a>
-    </nav>
+<button class="cart-btn" id="cart-open" type="button" aria-label="Відкрити кошик">🛒 Кошик <span class="badge" id="cart-count">0</span></button>
 
+    </nav>
         <div class="logo">
-            <img src="img/Gemini_Generated_Image_tumtfrtumtfrtumt.jpg" alt="Umbra Store Logo" class="logo">
+            <img src="img/photo_2026-11-25_19-32-25.jpg" alt="Umbra Store Logo" class="logo">
         </div>
     </header>
 
@@ -150,6 +151,127 @@
 
     </footer>
 
+<div class="overlay" id="overlay"></div>
+<aside class="cart-panel" id="cart-panel" aria-label="Кошик">
+  <div class="cart-head"><span>Кошик</span><button class="cart-close" id="cart-close" type="button" aria-label="Закрити">✕</button></div>
+  <ul class="cart-items" id="cart-items"></ul>
+  <div class="cart-total"><span>Разом:</span><span id="cart-total">0 грн</span></div>
+  <div class="cart-actions">
+    <button class="clear" id="cart-clear" type="button">Очистити</button>
+    <button class="checkout" id="cart-checkout" type="button">Оформити</button>
+  </div>
+</aside>
+
     <script src="script.js"></script>
+    
+<script>
+(function () {
+  var cart = {};
+  var $ = function (id) { return document.getElementById(id); };
+  var panel = $("cart-panel"), overlay = $("overlay"), list = $("cart-items");
+  var fmt = function (n) { return n.toLocaleString("uk-UA").replace(/\u00a0|\u202f/g, " ") + " грн"; };
+
+  function toggle(open) {
+    panel.classList.toggle("open", open);
+    overlay.classList.toggle("open", open);
+  }
+
+  function render() {
+    var names = Object.keys(cart), count = 0, total = 0;
+    list.innerHTML = "";
+
+    if (!names.length) {
+      var empty = document.createElement("li");
+      empty.className = "cart-empty";
+      empty.textContent = "Кошик порожній";
+      list.appendChild(empty);
+    }
+
+    names.forEach(function (name) {
+      var it = cart[name];
+      count += it.qty;
+      total += it.qty * it.price;
+
+      var li = document.createElement("li");
+      li.className = "cart-item";
+
+      var top = document.createElement("div");
+      top.className = "cart-top";
+      var pic = document.createElement("img");
+      pic.src = it.img;
+      pic.alt = name;
+      var title = document.createElement("div");
+      title.textContent = name;
+      top.append(pic, title);
+
+      var row = document.createElement("div");
+      row.className = "cart-row";
+      var qty = document.createElement("div");
+      qty.className = "qty";
+      var minus = document.createElement("button");
+      minus.type = "button";
+      minus.textContent = "−";
+      var num = document.createElement("span");
+      num.textContent = it.qty;
+      var plus = document.createElement("button");
+      plus.type = "button";
+      plus.textContent = "+";
+      minus.onclick = function () { if (--it.qty <= 0) delete cart[name]; render(); };
+      plus.onclick = function () { it.qty++; render(); };
+      qty.append(minus, num, plus);
+
+      var sum = document.createElement("strong");
+      sum.textContent = fmt(it.qty * it.price);
+      row.append(qty, sum);
+
+      li.append(top, row);
+      list.appendChild(li);
+    });
+
+    // синхронізація кнопок «Купити» з кошиком
+    document.querySelectorAll(".buy").forEach(function (btn) {
+      var n = btn.closest(".card").querySelector("h3").textContent;
+      btn.textContent = cart[n] ? "Додано ✓" : "Купити";
+    });
+
+    $("cart-count").textContent = count;
+    $("cart-total").textContent = fmt(total);
+  }
+
+  // кнопка «Купити» в кожній картці
+  document.querySelectorAll(".card").forEach(function (card) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "buy";
+    b.textContent = "Купити";
+    b.addEventListener("click", function () {
+      var name = card.querySelector("h3").textContent;
+      var price = parseInt(card.querySelector(".price").textContent.replace(/\D/g, ""), 10);
+      if (!cart[name]) cart[name] = { price: price, qty: 0, img: card.querySelector("img").src };
+      cart[name].qty++;
+      render();
+    });
+    card.appendChild(b);
+  });
+
+  $("cart-open").onclick = function () { toggle(true); };
+  $("cart-close").onclick = overlay.onclick = function () { toggle(false); };
+  $("cart-clear").onclick = function () { cart = {}; render(); };
+  $("cart-checkout").onclick = function () {
+    if (Object.keys(cart).length) {
+      alert("Дякуємо за замовлення!");
+      cart = {};
+      render();
+      toggle(false);
+    }
+  };
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") toggle(false);
+  });
+
+  render();
+})();
+</script>
+
 </body>
 </html>
